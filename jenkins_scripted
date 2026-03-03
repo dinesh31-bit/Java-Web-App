@@ -8,11 +8,11 @@ node{
     stage("maven clean package"){
         sh "${mavenHome}/bin/mvn clean package"
     }
-    stage("maven celan verify"){
-        withCredentials([string(credentialsId: 'SonarQube', variable: 'sonar_qube')]) {
-            sh "${mavenHome}/bin/mvn clean verify sonar:sonar -Dsonar.token=${sonar_qube}"
-        }
-    }
+    // stage("maven celan verify"){
+    //     withCredentials([string(credentialsId: 'SonarQube', variable: 'sonar_qube')]) {
+    //         sh "${mavenHome}/bin/mvn clean verify sonar:sonar -Dsonar.token=${sonar_qube}"
+    //     }
+    // }
     stage("maven clean deploy"){
         sh "${mavenHome}/bin/mvn clean deploy"
     }
