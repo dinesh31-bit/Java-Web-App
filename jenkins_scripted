@@ -20,10 +20,10 @@ node{
         sh "echo 'deploy to tomcat'"
         sshagent(['tomcat-shh-credentials']) {
             sh """
-                ssh -o strichtHostKeyChecking=no ec2-user@${tomcat_ip} sudo systemctl stop tomcat
-                ssh -o strichtHostKeyChecking=no ec2-user@${tomcat_ip} rm -f /opt/tomcat/webapps/java-web-app-1.0.war
-                scp -o strichtHostKeyChecking=no target/java-web-app-1.0.war ec2-user@${tomcat_ip}:/opt/tomcat/webapps/java-web-app-1.0.war
-                ssh -o strichtHostKeyChecking=no ec2-user@${tomcat_ip} sudo systemctl start tomcat
+                ssh -o strictHostKeyChecking=no ec2-user@${tomcat_ip} sudo systemctl stop tomcat
+                ssh -o strictHostKeyChecking=no ec2-user@${tomcat_ip} rm -f /opt/tomcat/webapps/java-web-app-1.0.war
+                scp -o strictHostKeyChecking=no target/java-web-app-1.0.war ec2-user@${tomcat_ip}:/opt/tomcat/webapps/java-web-app-1.0.war
+                ssh -o strictHostKeyChecking=no ec2-user@${tomcat_ip} sudo systemctl start tomcat
             """
         }
     }
