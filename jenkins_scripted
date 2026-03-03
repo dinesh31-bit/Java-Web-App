@@ -1,0 +1,30 @@
+properties([pipelineTriggers([githubPush()])])
+node{
+    def mavenHome= tool name: 'Maven 3.9.12', type: 'maven'
+    def tomcat_ip = '13.235.94.162'
+    // stage("git clone"){
+    //     git brach: 'main', credentialsId:'dinesh31bitgit', url:'https://github.com/dinesh31-bit/student-reg-webapp.git'
+    // }
+    stage("maven clean package"){
+        sh "${mavenHome}/bin/mvn clean package"
+    }
+    stage("maven celan verify"){
+        withCredentials([string(credentialsId: 'SonarQube', variable: 'sonar_qube')]) {
+            sh "${mavenHome}/bin/mvn clean verify sonar:sonar -Dsonar.token: ${sonar_qube}"
+        }
+    }
+    stage("maven clean deploy"){
+        sh "${mavenHome}/bin/mvn clean deploy"
+    }
+    stage("deploy to tomcat"){
+        sh "echo 'deploy to tomcat'"
+        sshagent(['tomcat-shh-credentials']) {
+            sh """
+                ssh -o strightHostKeyChecking=no ec2-user@${tomcat_ip} sudo systemctl stop tomcat
+                ssh -o strightHostKeyChecking=no ec2-user@${tomcat_ip} rm -f /opt/tomcat/webhook/java-web-app-1.0.war
+                scp -o strightHostKeyChecking=no target/java-web-app-1.0.war ec2-user@${tomcat_ip}:/opt/tomcat/webapp/java-web-app-1.0.war
+                ssh -o strightHostKeyChecking=no ec2-user@${tomcat_ip} sudo systemctl start tomcat
+            """
+        }
+    }
+}
