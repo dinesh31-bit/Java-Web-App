@@ -13,9 +13,9 @@ node{
     //         sh "${mavenHome}/bin/mvn clean verify sonar:sonar -Dsonar.token=${sonar_qube}"
     //     }
     // }
-    stage("maven clean deploy"){
-        sh "${mavenHome}/bin/mvn clean deploy"
-    }
+    // stage("maven clean deploy"){
+    //     sh "${mavenHome}/bin/mvn clean deploy"
+    // }
     stage("deploy to tomcat"){
         sh "echo 'deploy to tomcat'"
         sshagent(['tomcat-shh-credentials']) {
